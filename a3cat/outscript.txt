@@ -1,0 +1,496 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+--------------
+SHOW DATABASES
+--------------
+
++--------------------+
+| Database           |
++--------------------+
+| assign2db          |
+| flip5              |
+| information_schema |
+| myfirstdb          |
+| mysql              |
+| performance_schema |
+| sys                |
+| vetoffice          |
++--------------------+
+8 rows in set (0.00 sec)
+
+--------------
+DROP DATABASE IF EXISTS assign2db
+--------------
+
+Query OK, 14 rows affected (1.56 sec)
+
+--------------
+CREATE DATABASE assign2db
+--------------
+
+Query OK, 1 row affected (0.07 sec)
+
+--------------
+SHOW TABLES
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+CREATE TABLE ta(tauserid VARCHAR(8) NOT NULL, firstname VARCHAR(30) NOT NULL, lastname VARCHAR(30) NOT NULL, studentnum CHAR(9) NOT NULL, degreetype VARCHAR(7),  PRIMARY KEY(tauserid))
+--------------
+
+Query OK, 0 rows affected (0.23 sec)
+
+--------------
+CREATE TABLE course (coursenum CHAR(6) NOT NULL, coursename VARCHAR(30) NOT NULL, level SMALLINT, year SMALLINT, PRIMARY KEY(coursenum))
+--------------
+
+Query OK, 0 rows affected (0.10 sec)
+
+--------------
+CREATE TABLE courseoffer (coid CHAR(4) NOT NULL, numstudent SMALLINT CHECK (numstudent > 0), term CHAR (6) NOT NULL, year SMALLINT NOT NULL, whichcourse CHAR(6) NOT NULL, PRIMARY KEY (coid),   FOREIGN KEY (whichcourse) REFERENCES course(coursenum) ON DELETE CASCADE)
+--------------
+
+Query OK, 0 rows affected (0.17 sec)
+
+--------------
+CREATE TABLE hasworkedon(tauserid VARCHAR(8) NOT NULL, coid CHAR(4) NOT NULL, hours SMALLINT, PRIMARY KEY (tauserid, coid), FOREIGN KEY(tauserid) REFERENCES ta(tauserid) ON DELETE RESTRICT, FOREIGN KEY(coid) REFERENCES courseoffer(coid) ON DELETE RESTRICT)
+--------------
+
+Query OK, 0 rows affected (0.14 sec)
+
+--------------
+CREATE TABLE hates(htauserid VARCHAR(8) NOT NULL, hcoursenum CHAR(6) NOT NULL,  PRIMARY KEY (htauserid, hcoursenum), FOREIGN KEY(htauserid) REFERENCES ta(tauserid) ON DELETE CASCADE, FOREIGN KEY (hcoursenum) REFERENCES course(coursenum) ON DELETE CASCADE)
+--------------
+
+Query OK, 0 rows affected (0.17 sec)
+
+--------------
+CREATE TABLE loves(ltauserid VARCHAR(8) NOT NULL, lcoursenum CHAR(6) NOT NULL,  PRIMARY KEY (ltauserid, lcoursenum), FOREIGN KEY(ltauserid) REFERENCES ta(tauserid) ON DELETE CASCADE, FOREIGN KEY (lcoursenum) REFERENCES course(coursenum) ON DELETE CASCADE)
+--------------
+
+Query OK, 0 rows affected (0.14 sec)
+
+--------------
+SHOW TABLES
+--------------
+
++---------------------+
+| Tables_in_assign2db |
++---------------------+
+| course              |
+| courseoffer         |
+| hasworkedon         |
+| hates               |
+| loves               |
+| ta                  |
++---------------------+
+6 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM ta
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+INSERT INTO ta VALUES ('mgeller','Monica','Geller','251000123','PhD')
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+INSERT INTO ta VALUES ('rgeller','Ross','Geller','251000222','Masters')
+--------------
+
+Query OK, 1 row affected (0.05 sec)
+
+--------------
+INSERT INTO ta VALUES ('rgreen','Rachel','Green','251000333','PhD')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO ta VALUES ('cgeller','Chandler','Geller','251000444','PhD')
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+INSERT INTO ta VALUES ('jbing','Joey','Bing','251000444','PhD')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO ta VALUES ('pbing','Phoebe','Bing','251000555','Masters')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO ta VALUES ('pbing2','Patty','Bing','251000666','Masters')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+SELECT * FROM ta
+--------------
+
++----------+-----------+----------+------------+------------+
+| tauserid | firstname | lastname | studentnum | degreetype |
++----------+-----------+----------+------------+------------+
+| cgeller  | Chandler  | Geller   | 251000444  | PhD        |
+| jbing    | Joey      | Bing     | 251000444  | PhD        |
+| mgeller  | Monica    | Geller   | 251000123  | PhD        |
+| pbing    | Phoebe    | Bing     | 251000555  | Masters    |
+| pbing2   | Patty     | Bing     | 251000666  | Masters    |
+| rgeller  | Ross      | Geller   | 251000222  | Masters    |
+| rgreen   | Rachel    | Green    | 251000333  | PhD        |
++----------+-----------+----------+------------+------------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM course
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+INSERT INTO course VALUES ('CS1033','Multimedia', 1, 2003)
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO course VALUES ('CS3319','Intro to Databases', 3, 1973)
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO course VALUES ('CS4411','Advanced Databases', 4, 1987)
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO course VALUES ('CS1026','Intro to Programming', 1, 1995)
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+SELECT * FROM course
+--------------
+
++-----------+----------------------+-------+------+
+| coursenum | coursename           | level | year |
++-----------+----------------------+-------+------+
+| CS1026    | Intro to Programming |     1 | 1995 |
+| CS1033    | Multimedia           |     1 | 2003 |
+| CS3319    | Intro to Databases   |     3 | 1973 |
+| CS4411    | Advanced Databases   |     4 | 1987 |
++-----------+----------------------+-------+------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM courseoffer
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('RD34',820, 'Fall',2021, 'CS1033')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('RD44',200, 'Fall',2023, 'CS3319')
+--------------
+
+Query OK, 1 row affected (0.03 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('RD55',250, 'Fall',2020, 'CS3319')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('RD66',170, 'Fall',2021, 'CS3319')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('RD37',720, 'Spring',2021, 'CS1033')
+--------------
+
+Query OK, 1 row affected (0.04 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('RD99',600, 'Fall',2001, 'CS1033')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('RD12',120, 'Spring',2022, 'CS4411')
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('RD13',130, 'Spring',1990, 'CS1026')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+SELECT * FROM courseoffer
+--------------
+
++------+------------+--------+------+-------------+
+| coid | numstudent | term   | year | whichcourse |
++------+------------+--------+------+-------------+
+| RD12 |        120 | Spring | 2022 | CS4411      |
+| RD13 |        130 | Spring | 1990 | CS1026      |
+| RD34 |        820 | Fall   | 2021 | CS1033      |
+| RD37 |        720 | Spring | 2021 | CS1033      |
+| RD44 |        200 | Fall   | 2023 | CS3319      |
+| RD55 |        250 | Fall   | 2020 | CS3319      |
+| RD66 |        170 | Fall   | 2021 | CS3319      |
+| RD99 |        600 | Fall   | 2001 | CS1033      |
++------+------------+--------+------+-------------+
+8 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM hasworkedon
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+INSERT INTO hasworkedon VALUES ('mgeller','RD34',100)
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+INSERT INTO hasworkedon VALUES ('mgeller','RD99',100)
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO hasworkedon VALUES ('mgeller','RD44',20)
+--------------
+
+Query OK, 1 row affected (0.03 sec)
+
+--------------
+INSERT INTO hasworkedon VALUES ('mgeller','RD37',50)
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO hasworkedon VALUES ('mgeller','RD12',100)
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO hasworkedon VALUES ('rgeller','RD34',80)
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO hasworkedon VALUES ('rgreen','RD34',100)
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+SELECT * FROM hasworkedon
+--------------
+
++----------+------+-------+
+| tauserid | coid | hours |
++----------+------+-------+
+| mgeller  | RD12 |   100 |
+| mgeller  | RD34 |   100 |
+| mgeller  | RD37 |    50 |
+| mgeller  | RD44 |    20 |
+| mgeller  | RD99 |   100 |
+| rgeller  | RD34 |    80 |
+| rgreen   | RD34 |   100 |
++----------+------+-------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM loves
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+INSERT INTO loves VALUES ('mgeller','CS1033')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO loves VALUES ('mgeller','CS4411')
+--------------
+
+Query OK, 1 row affected (0.03 sec)
+
+--------------
+INSERT INTO loves VALUES ('rgreen','CS1033')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO loves VALUES ('rgreen','CS1026')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+SELECT * FROM loves
+--------------
+
++-----------+------------+
+| ltauserid | lcoursenum |
++-----------+------------+
+| rgreen    | CS1026     |
+| mgeller   | CS1033     |
+| rgreen    | CS1033     |
+| mgeller   | CS4411     |
++-----------+------------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM hates
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+INSERT INTO hates VALUES ('mgeller','CS3319')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO hates VALUES ('pbing','CS3319')
+--------------
+
+Query OK, 1 row affected (0.04 sec)
+
+--------------
+INSERT INTO hates VALUES ('pbing','CS1033')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+SELECT * FROM hates
+--------------
+
++-----------+------------+
+| htauserid | hcoursenum |
++-----------+------------+
+| pbing     | CS1033     |
+| mgeller   | CS3319     |
+| pbing     | CS3319     |
++-----------+------------+
+3 rows in set (0.00 sec)
+
+--------------
+INSERT INTO course VALUES ('CS3388','Graphics', 3, 1975)
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('ABC1',100, 'Fall',2021, 'CS3388')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('ABC2',200, 'Summer',2001, 'CS3388')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO courseoffer VALUES ('ABC3',190, 'Summer',2002, 'CS3388')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO ta VALUES ('sbulloc','Sandra','Bullock','250111123','PhD')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO ta VALUES ('sbull','Sandy','Bullock','250111124','PhD')
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+INSERT INTO ta VALUES ('sbull2','Susan','Bull','250111125','PhD')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO ta VALUES ('sbull3','Steve','Ball','250111126','Masters')
+--------------
+
+Query OK, 1 row affected (0.03 sec)
+
+--------------
+INSERT INTO ta VALUES ('sbull4','Simon','Beauty','250111127','PhD')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO loves VALUES ('sbulloc','CS3388')
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+INSERT INTO loves VALUES ('sbulloc','CS3319')
+--------------
+
+Query OK, 1 row affected (0.02 sec)
+
+--------------
+INSERT INTO hates VALUES ('sbulloc','CS1033')
+--------------
+
+Query OK, 1 row affected (0.04 sec)
+
+--------------
+ALTER TABLE ta ADD COLUMN image VARCHAR(200)
+--------------
+
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+Bye
